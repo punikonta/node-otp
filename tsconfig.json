@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "preserve",
+        "declaration": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "isolatedModules": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "types": [
+            "node"
+        ]
+    },
+    "files": [
+        "./index.ts"
+    ]
+}
