@@ -78,6 +78,8 @@ Also don't use a `window` value other than `0` for HOTP unless you know what you
 
 The default `window` value of `1` for TOTP generally is fine and common practice to mitigate small clock drifts between the server and the user.
 
+Don't use the `Base32` class as a generic base32 encoder/decoder. Its behavior is tailored to the needs of this library and may not be suitable for other purposes than OTP secrets in URLs, mainly because it strips and ignores padding. See [Google Authenticator's Key Uri Format](https://github.com/google/google-authenticator/wiki/Key-Uri-Format#secret).
+
 ## API
 
 The API uses the following types and enums:
