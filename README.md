@@ -183,3 +183,5 @@ Url.getTotpUrl(
 ## TODO
 
 Probably a good idea to add some sanity checks in the future, e.g. for nonsensical stuff like negative periods, windows or missing mandatory parameters.
+
+Currently the API mixes milliseconds and seconds in a few places. This needs to be addressed without making it too weird for the caller, e.g. by having them to do manual conversion of `Date.now()` timestamps.
