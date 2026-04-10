@@ -46,12 +46,12 @@ namespace Otp {
 
         static validate(token: string, secret: Buffer, counter: number, window: number = 0, options?: Partial<HotpOptions>): boolean {
             const opts = { ...this.DEFAULTS, ...options }
-            if (token.length != opts.digits) return false
+            if (token.length !== opts.digits) return false
             const compare = (counter: number) => {
                 const generated = Hotp.generate(secret, counter, opts)
                 const token_buffer = Buffer.from(token)
                 const generated_buffer = Buffer.from(generated)
-                if (token_buffer.length != generated_buffer.length) return false
+                if (token_buffer.length !== generated_buffer.length) return false
                 return timingSafeEqual(token_buffer, generated_buffer)
             }
             if (compare(counter)) return true
