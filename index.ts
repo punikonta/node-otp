@@ -91,7 +91,7 @@ namespace Otp {
         }
     }
 
-    class Base32 {
+    export class Base32 {
         private static readonly ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
 
         public static encode(buffer: Buffer): string {
@@ -117,7 +117,9 @@ namespace Otp {
         }
 
         public static decode(str: string): Buffer {
-            const cleaned = str.toUpperCase().trim().replace(/[^A-Z2-7]/g, '');
+            const cleaned = str.toUpperCase().trim().replace(/=+$/, '')
+            if (/[^A-Z2-7]/.test(cleaned)) throw new Error(`Invalid Base32 character in: "${str}"`)
+
             const buffer = Buffer.alloc(Math.floor((cleaned.length * 5) / 8))
 
             let bits = 0
@@ -126,7 +128,6 @@ namespace Otp {
 
             for (let i = 0; i < cleaned.length; i++) {
                 const val = this.ALPHABET.indexOf(cleaned[i])
-                if (val === -1) throw new Error('Invalid character in Base32 string')
 
                 value = (value << 5) | val
                 bits += 5
