@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto'
 import { Buffer } from 'node:buffer'
 
 namespace Otp {
-    export const enum HashAlgorithm {
+    export enum HashAlgorithm {
         SHA1 = 'sha1',
         SHA256 = 'sha256',
         SHA384 = 'sha384',
