@@ -82,7 +82,7 @@ namespace Otp {
             return Hotp.validate(token, secret, counter, window, opts)
         }
 
-        static remaining(period: number = 30, time: number = Date.now()) {
+        static remaining(period: number = 30, time: number = Date.now()): number {
             return period - (time / 1000) % period
         }
 
