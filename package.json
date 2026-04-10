@@ -1,6 +1,6 @@
 {
     "name": "@punikonta/node-otp",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Simple and dependency free OTP implementation (HOTP, TOTP) for Node.js written in TypeScript. Passes RFC test vectors and works with most common authenticator apps.",
     "keywords": [
         "otp",
