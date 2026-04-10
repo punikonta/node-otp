@@ -35,6 +35,7 @@ const options = {
     period: 30,
 }
 
+// default value. omit if you just want to use the current time.
 const now = Date.now()
 
 const token = Otp.Totp.generate(secret, now, options)
