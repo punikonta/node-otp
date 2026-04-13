@@ -26,13 +26,13 @@ var Otp;
         }
         static validate(token, secret, counter, window = 0, options) {
             const opts = Object.assign(Object.assign({}, this.DEFAULTS), options);
-            if (token.length != opts.digits)
+            if (token.length !== opts.digits)
                 return false;
             const compare = (counter) => {
                 const generated = Hotp.generate(secret, counter, opts);
                 const token_buffer = Buffer.from(token);
                 const generated_buffer = Buffer.from(generated);
-                if (token_buffer.length != generated_buffer.length)
+                if (token_buffer.length !== generated_buffer.length)
                     return false;
                 return timingSafeEqual(token_buffer, generated_buffer);
             };
@@ -53,7 +53,7 @@ var Otp;
     };
     Otp.Hotp = Hotp;
     class Totp {
-        static generate(secret, time, options) {
+        static generate(secret, time = Date.now(), options) {
             const opts = Object.assign(Object.assign({}, this.DEFAULTS), options);
             const counter = Totp.timeToCounter(time, opts.period);
             return Hotp.generate(secret, counter, opts);
@@ -95,15 +95,15 @@ var Otp;
             return output;
         }
         static decode(str) {
-            const cleaned = str.toUpperCase().trim().replace(/[^A-Z2-7]/g, '');
+            const cleaned = str.toUpperCase().trim().replace(/=+$/, '');
+            if (/[^A-Z2-7]/.test(cleaned))
+                throw new Error(`Invalid Base32 character in: "${str}"`);
             const buffer = Buffer.alloc(Math.floor((cleaned.length * 5) / 8));
             let bits = 0;
             let value = 0;
             let index = 0;
             for (let i = 0; i < cleaned.length; i++) {
                 const val = this.ALPHABET.indexOf(cleaned[i]);
-                if (val === -1)
-                    throw new Error('Invalid character in Base32 string');
                 value = (value << 5) | val;
                 bits += 5;
                 if (bits >= 8) {
@@ -115,6 +115,7 @@ var Otp;
         }
     }
     Base32.ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    Otp.Base32 = Base32;
     class Url {
         static getHotpUrl(issuer, label, secret, counter, options) {
             const opts = Object.assign(Object.assign({}, Hotp.DEFAULTS), options);

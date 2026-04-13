@@ -1,6 +1,6 @@
 import { Buffer } from 'node:buffer';
 declare namespace Otp {
-    const enum HashAlgorithm {
+    enum HashAlgorithm {
         SHA1 = "sha1",
         SHA256 = "sha256",
         SHA384 = "sha384",
@@ -22,10 +22,15 @@ declare namespace Otp {
     }
     class Totp {
         static readonly DEFAULTS: TotpOptions;
-        static generate(secret: Buffer, time: number, options?: Partial<TotpOptions>): string;
+        static generate(secret: Buffer, time?: number, options?: Partial<TotpOptions>): string;
         static validate(token: string, secret: Buffer, time?: number, window?: number, options?: Partial<TotpOptions>): boolean;
         static remaining(period?: number, time?: number): number;
         static timeToCounter(time: number, period: number): number;
+    }
+    class Base32 {
+        private static readonly ALPHABET;
+        static encode(buffer: Buffer): string;
+        static decode(str: string): Buffer;
     }
     class Url {
         static getHotpUrl(issuer: string, label: string, secret: Buffer, counter: number, options?: Partial<HotpOptions>): string;
