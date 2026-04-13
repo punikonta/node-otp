@@ -117,7 +117,7 @@ Hotp.validate(
     token: string,
     secret: Buffer,
     counter: number,
-    window: number = 0,
+    window?: number = 0,
     options?: Partial<HotpOptions>
 ): boolean
 
@@ -133,22 +133,22 @@ static readonly DEFAULTS: HotpOptions = {
 ```typescript
 Totp.generate(
     secret: Buffer,
-    time: number = Date.now(),
+    time?: number = Date.now(),
     options?: Partial<TotpOptions>
-): string
+): string;
 
 Totp.validate(
     token: string,
     secret: Buffer,
-    time: number = Date.now(),
-    window: number = 1,
+    time?: number = Date.now(),
+    window?: number = 1,
     options?: Partial<TotpOptions>
 ): boolean
 
 // remaining time until next token (seconds, fractional)
 Totp.remaining(
     period: number = 30,
-    time: number = Date.now()
+    time?: number = Date.now()
 ): number
 
 // default values for option parameters that are omitted
