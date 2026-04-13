@@ -46,18 +46,22 @@ namespace Otp {
 
         static validate(token: string, secret: Buffer, counter: number, window: number = 0, options?: Partial<HotpOptions>): boolean {
             const opts = { ...this.DEFAULTS, ...options }
+
             if (token.length !== opts.digits) return false
-            const compare = (counter: number) => {
-                const generated = Hotp.generate(secret, counter, opts)
+
+            const match = (token: string, secret: Buffer, counter: number, opts: HotpOptions): boolean => {
                 const token_buffer = Buffer.from(token)
-                const generated_buffer = Buffer.from(generated)
-                if (token_buffer.length !== generated_buffer.length) return false
-                return timingSafeEqual(token_buffer, generated_buffer)
+                const generated_token = Hotp.generate(secret, counter, opts)
+                const generated_token_buffer = Buffer.from(generated_token)
+
+                if (token_buffer.length !== generated_token_buffer.length) return false
+                return timingSafeEqual(token_buffer, generated_token_buffer)
             }
-            if (compare(counter)) return true
+
+            if (match(token, secret, counter, opts)) return true
             for (let i = 1; i <= window; i++) {
-                if (compare(counter + i)) return true
-                if (compare(counter - i)) return true
+                if (match(token, secret, counter + i, opts)) return true
+                if (match(token, secret, counter - i, opts)) return true
             }
             return false
         }
