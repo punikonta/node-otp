@@ -70,7 +70,7 @@ namespace Otp {
             period: 30,
         }
 
-        static generate(secret: Buffer, time: number, options?: Partial<TotpOptions>): string {
+        static generate(secret: Buffer, time: number = Date.now(), options?: Partial<TotpOptions>): string {
             const opts = { ...this.DEFAULTS, ...options }
             const counter = Totp.timeToCounter(time, opts.period)
             return Hotp.generate(secret, counter, opts)
