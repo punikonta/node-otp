@@ -27,24 +27,10 @@ import Otp from '@punikonta/node-otp'
 // this must be random, stored securely and be unique for each user.
 const secret = Buffer.from('8eddb53e05fa936c2530c8045a58f81b', 'hex')
 
-// options are optional. these are the defaults and common practice.
-// just omit the options parameter if you're fine with the defaults.
-const options = {
-    algorithm: Otp.HashAlgorithm.SHA1,
-    digits: 6,
-    period: 30,
-}
-
-// default value. omit if you just want to use the current time.
-const now = Date.now()
-
-const token = Otp.Totp.generate(secret, now, options)
-const remaining = Otp.Totp.remaining(options.period, now)
-const url = Otp.Url.getTotpUrl('example.com', 'foobar', secret, options)
-
-// default value. omit if you're fine with the default.
-const window = 1
-const valid = Otp.Totp.validate('123456', secret, now, window, options)
+const token = Otp.Totp.generate(secret)
+const remaining = Otp.Totp.remaining()
+const url = Otp.Url.getTotpUrl('example.com', 'foobar', secret)
+const valid = Otp.Totp.validate('123456', secret)
 
 console.log(`token: ${token}`)
 console.log(`valid for ${remaining.toFixed(2)} seconds`)
@@ -133,17 +119,17 @@ static readonly DEFAULTS: HotpOptions = {
 ```typescript
 Totp.generate(
     secret: Buffer,
-    time?: number = Date.now(),
-    options?: Partial<TotpOptions>
-): string;
+    options?: Partial<TotpOptions>,
+    time?: number
+): string
 
 Totp.validate(
     token: string,
     secret: Buffer,
-    time?: number = Date.now(),
-    window?: number = 1,
-    options?: Partial<TotpOptions>
-): boolean
+    options?: Partial<TotpOptions>,
+    window?: number,
+    time?: number
+): boolean;
 
 // remaining time until next token (seconds, fractional)
 Totp.remaining(

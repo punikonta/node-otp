@@ -22,8 +22,8 @@ declare namespace Otp {
     }
     class Totp {
         static readonly DEFAULTS: TotpOptions;
-        static generate(secret: Buffer, time?: number, options?: Partial<TotpOptions>): string;
-        static validate(token: string, secret: Buffer, time?: number, window?: number, options?: Partial<TotpOptions>): boolean;
+        static generate(secret: Buffer, options?: Partial<TotpOptions>, time?: number): string;
+        static validate(token: string, secret: Buffer, options?: Partial<TotpOptions>, window?: number, time?: number): boolean;
         static remaining(period?: number, time?: number): number;
         static timeToCounter(time: number, period: number): number;
     }

@@ -58,9 +58,11 @@ test('totp rfc6238 test values', () => {
         test(`test value, time: ${value.time}, algorithm: ${value.algorithm}`, () => {
             const key = Buffer.from(value.secret, 'utf8')
             const time = value.time * 1000 // test values are given in seconds, but we expect milliseconds
-            const actual = Otp.Totp.generate(key, time, { algorithm: value.algorithm, digits: value.expected.length })
-
+            const actual = Otp.Totp.generate(key, { algorithm: value.algorithm, digits: value.expected.length }, time)
             assert.strictEqual(value.expected, actual)
+
+            const valid = Otp.Totp.validate(value.expected, key, { algorithm: value.algorithm, digits: value.expected.length }, 0, time)
+            assert(valid)
         })
     }
 })

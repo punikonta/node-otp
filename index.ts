@@ -49,7 +49,7 @@ namespace Otp {
 
             if (token.length !== opts.digits) return false
 
-            const match = (token: string, secret: Buffer, counter: number, opts: HotpOptions): boolean => {
+            const equals = (token: string, secret: Buffer, counter: number, opts: HotpOptions): boolean => {
                 const token_buffer = Buffer.from(token)
                 const generated_token = Hotp.generate(secret, counter, opts)
                 const generated_token_buffer = Buffer.from(generated_token)
@@ -58,10 +58,10 @@ namespace Otp {
                 return timingSafeEqual(token_buffer, generated_token_buffer)
             }
 
-            if (match(token, secret, counter, opts)) return true
+            if (equals(token, secret, counter, opts)) return true
             for (let i = 1; i <= window; i++) {
-                if (match(token, secret, counter + i, opts)) return true
-                if (match(token, secret, counter - i, opts)) return true
+                if (equals(token, secret, counter + i, opts)) return true
+                if (equals(token, secret, counter - i, opts)) return true
             }
             return false
         }
@@ -74,13 +74,13 @@ namespace Otp {
             period: 30,
         }
 
-        static generate(secret: Buffer, time: number = Date.now(), options?: Partial<TotpOptions>): string {
+        static generate(secret: Buffer, options?: Partial<TotpOptions>, time: number = Date.now()): string {
             const opts = { ...this.DEFAULTS, ...options }
             const counter = Totp.timeToCounter(time, opts.period)
             return Hotp.generate(secret, counter, opts)
         }
 
-        static validate(token: string, secret: Buffer, time: number = Date.now(), window: number = 1, options?: Partial<TotpOptions>): boolean {
+        static validate(token: string, secret: Buffer, options?: Partial<TotpOptions>, window: number = 1, time: number = Date.now()): boolean {
             const opts = { ...this.DEFAULTS, ...options }
             const counter = Totp.timeToCounter(time, opts.period)
             return Hotp.validate(token, secret, counter, window, opts)

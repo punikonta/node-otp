@@ -28,20 +28,20 @@ var Otp;
             const opts = Object.assign(Object.assign({}, this.DEFAULTS), options);
             if (token.length !== opts.digits)
                 return false;
-            const compare = (counter) => {
-                const generated = Hotp.generate(secret, counter, opts);
+            const equals = (token, secret, counter, opts) => {
                 const token_buffer = Buffer.from(token);
-                const generated_buffer = Buffer.from(generated);
-                if (token_buffer.length !== generated_buffer.length)
+                const generated_token = Hotp.generate(secret, counter, opts);
+                const generated_token_buffer = Buffer.from(generated_token);
+                if (token_buffer.length !== generated_token_buffer.length)
                     return false;
-                return timingSafeEqual(token_buffer, generated_buffer);
+                return timingSafeEqual(token_buffer, generated_token_buffer);
             };
-            if (compare(counter))
+            if (equals(token, secret, counter, opts))
                 return true;
             for (let i = 1; i <= window; i++) {
-                if (compare(counter + i))
+                if (equals(token, secret, counter + i, opts))
                     return true;
-                if (compare(counter - i))
+                if (equals(token, secret, counter - i, opts))
                     return true;
             }
             return false;
@@ -53,12 +53,12 @@ var Otp;
     };
     Otp.Hotp = Hotp;
     class Totp {
-        static generate(secret, time = Date.now(), options) {
+        static generate(secret, options, time = Date.now()) {
             const opts = Object.assign(Object.assign({}, this.DEFAULTS), options);
             const counter = Totp.timeToCounter(time, opts.period);
             return Hotp.generate(secret, counter, opts);
         }
-        static validate(token, secret, time = Date.now(), window = 1, options) {
+        static validate(token, secret, options, window = 1, time = Date.now()) {
             const opts = Object.assign(Object.assign({}, this.DEFAULTS), options);
             const counter = Totp.timeToCounter(time, opts.period);
             return Hotp.validate(token, secret, counter, window, opts);
